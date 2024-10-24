@@ -1,3 +1,3 @@
 # rf-inversion-diffuser
 
-Implementation for https://rf-inversion.github.io
+Diffuser's implementation for https://rf-inversion.github.io
