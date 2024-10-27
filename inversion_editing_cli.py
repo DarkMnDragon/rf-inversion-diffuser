@@ -138,6 +138,7 @@ def generate_eta_values(
     eta, 
     eta_trend,
 ):
+    assert start_step < end_step and start_step >= 0 and end_step <= len(timesteps), "Invalid start_step and end_step"
     # timesteps are monotonically decreasing, from 1.0 to 0.0
     eta_values = [0.0] * (len(timesteps) - 1)
     
@@ -249,7 +250,7 @@ def interpolated_denoise(
             eta = eta_values[idx]
             interpolated_velocity = eta * target_img_velocity + (1 - eta) * flux_velocity
             packed_latents = packed_latents + (t_prev - t_curr) * interpolated_velocity
-            print(f"X_{t_prev:.3f} = X_{t_curr:.3f} + {t_prev - t_curr:.3f} * ({eta:3f} * target_img_velocity + {1 - eta:.3f} * flux_velocity)")
+            print(f"X_{t_prev:.3f} = X_{t_curr:.3f} + {t_prev - t_curr:.3f} * ({eta:.3f} * target_img_velocity + {1 - eta:.3f} * flux_velocity)")
             
             packed_latents = packed_latents.to(DTYPE)
             progress_bar.update()
@@ -344,7 +345,7 @@ def main():
     output_filename = f"eta{args.eta_base}_{args.eta_trend}_start{args.start_step}_end{args.end_step}_inversed{args.use_inversed_latents}_guidance{args.guidance_scale}.png"
     output_path = os.path.join(args.output_dir, output_filename)
     out.save(output_path)
-    print(f"Saved output image to {output_path} with parameters: eta={args.eta}, start_time={args.start_time}, end_time={args.end_time}, guidance_scale={args.guidance_scale}")
+    print(f"Saved output image to {output_path} with parameters: eta_base={args.eta_base}, start_step={args.start_step}, end_step={args.end_step}, guidance_scale={args.guidance_scale}")
 
 if __name__ == "__main__":
     main()
